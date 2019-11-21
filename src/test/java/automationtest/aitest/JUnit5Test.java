@@ -13,8 +13,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 class JUnit5Test {
     private WebDriver driver;
     private static final String baseUrl = "http://www.google.com";
-    private boolean acceptNextAlert = true;
-    private StringBuffer verificationErrors = new StringBuffer();
+//    private boolean acceptNextAlert = true;
+//    private StringBuffer verificationErrors = new StringBuffer();
 
     @BeforeAll
     static void setUpBeforeClass() throws Exception {

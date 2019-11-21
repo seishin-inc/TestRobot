@@ -7,23 +7,19 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.junit.rules.TestName;
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoAlertPresentException;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 public class JUnit4Test {
 
     private WebDriver driver;
-    private String baseUrl;
+    private String baseUrl = "";
     private boolean acceptNextAlert = true;
     private StringBuffer verificationErrors = new StringBuffer();
 
-    @Rule
-    public TestName testName = new TestName();
+//    @Rule
+//    public TestName testName = new TestName();
 
     @Rule
     public TemporaryFolder folder= new TemporaryFolder();
@@ -35,9 +31,9 @@ public class JUnit4Test {
     @Before
     public void setUp() throws Exception {
         System.setProperty("webdriver.chrome.driver", "exe/chromedriver");
-        driver = new ChromeDriver();
-        baseUrl = "https://www.katalon.com/";
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        this.driver = new ChromeDriver();
+        this.baseUrl = "https://www.katalon.com/";
+        this.driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
     }
 
     @Test
@@ -59,6 +55,8 @@ public class JUnit4Test {
         driver.findElement(By.id("guestname")).clear();
         driver.findElement(By.id("guestname")).sendKeys("tewst");
         driver.findElement(By.id("goto_next")).click();
+
+       // driver.
     }
 
     @After
@@ -70,37 +68,37 @@ public class JUnit4Test {
         }
     }
 
-    private boolean isElementPresent(By by) {
-        try {
-            driver.findElement(by);
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
-    }
+//    private boolean isElementPresent(By by) {
+//        try {
+//            driver.findElement(by);
+//            return true;
+//        } catch (NoSuchElementException e) {
+//            return false;
+//        }
+//    }
+//
+//    private boolean isAlertPresent() {
+//        try {
+//            driver.switchTo().alert();
+//            return true;
+//        } catch (NoAlertPresentException e) {
+//            return false;
+//        }
+//    }
 
-    private boolean isAlertPresent() {
-        try {
-            driver.switchTo().alert();
-            return true;
-        } catch (NoAlertPresentException e) {
-            return false;
-        }
-    }
-
-    private String closeAlertAndGetItsText() {
-        try {
-            Alert alert = driver.switchTo().alert();
-            String alertText = alert.getText();
-            if (acceptNextAlert) {
-                alert.accept();
-            } else {
-                alert.dismiss();
-            }
-            return alertText;
-        } finally {
-            acceptNextAlert = true;
-        }
-    }
+//    private String closeAlertAndGetItsText() {
+//        try {
+//            Alert alert = driver.switchTo().alert();
+//            String alertText = alert.getText();
+//            if (acceptNextAlert) {
+//                alert.accept();
+//            } else {
+//                alert.dismiss();
+//            }
+//            return alertText;
+//        } finally {
+//            acceptNextAlert = true;
+//        }
+//    }
 
 }
