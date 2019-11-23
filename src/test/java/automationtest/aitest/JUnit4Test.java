@@ -11,6 +11,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import automationtest.aitest.webdriver.AITestWebDriverImpl;
+
 public class JUnit4Test {
 
     private WebDriver driver;
@@ -31,7 +33,7 @@ public class JUnit4Test {
     @Before
     public void setUp() throws Exception {
         System.setProperty("webdriver.chrome.driver", "exe/chromedriver");
-        this.driver = new ChromeDriver();
+        this.driver = new AITestWebDriverImpl(new ChromeDriver());
         this.baseUrl = "https://www.katalon.com/";
         this.driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
     }
