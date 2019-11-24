@@ -4,11 +4,13 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+//import org.apache.logging.log4j.LogManager;
+//import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import automationtest.aitest.exception.AITestException;
 import automationtest.aitest.utils.AITestUtils;
@@ -20,7 +22,7 @@ import automationtest.aitest.utils.AITestUtils;
  */
 public class RetryHandler implements InvocationHandler {
 
-  private static Logger logger = LogManager.getLogger();
+  private static Logger logger = LoggerFactory.getLogger(RetryHandler.class);//LogManager.getLogger();
 
   private Object target;
 
@@ -31,7 +33,7 @@ public class RetryHandler implements InvocationHandler {
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
     //System.out.println("DynamicProxy:before");
-    logger.trace("DynamicProxy:before");
+    logger.trace("before:{}-{}-{}",method.getDeclaringClass().getSimpleName(), method.getName(),args);
 
     Object result = null;
 
@@ -47,15 +49,18 @@ public class RetryHandler implements InvocationHandler {
         Throwable cause = ex.getCause();
         if (cause instanceof NoSuchElementException) {
           //対象が存在なし
-          logger.warn("対象が存在なし。リトライ発生");
+          logger.warn("NoSuchElementException 対象が存在なし。リトライ発生");
+          logger.trace(ex.getMessage(), ex);
         } else if (cause instanceof StaleElementReferenceException) {
           //対象が古かった
-          logger.warn("対象が古かった。リトライ発生");
+          logger.warn("NoSuchElementException 対象が古かった。リトライ発生");
+          logger.trace(ex.getMessage(), ex);
         } else if (cause instanceof ElementNotVisibleException) {
           //対象が一時的に利用不可
-          logger.warn("対象が一時的に利用不可。リトライ発生");
+          logger.warn("ElementNotVisibleException 対象が一時的に利用不可。リトライ発生");
+          logger.trace(ex.getMessage(), ex);
         } else {
-          logger.error("想定外異常発生しました。");
+          logger.error("想定外異常発生しました。", ex);
           throw ex;
         }
 
@@ -63,15 +68,15 @@ public class RetryHandler implements InvocationHandler {
         Thread.sleep(AITestUtils.getConf().getRetryIntervalMilliseonds());
 
         end = System.currentTimeMillis();
-        if (end - start > AITestUtils.getConf().getMaxRetryWaitMilliseconds()) {
+        long maxRetryWaitMs = AITestUtils.getConf().getMaxRetryWaitMilliseconds();
+        if (end - start > maxRetryWaitMs) {
           throw new AITestException("最大待ち時間を超えたため、処理を終了する。");
         }
 
       }
     }
 
-    //System.out.println("DynamicProxy:after");
-    logger.trace("DynamicProxy:after");
+    logger.trace("after:{}-{}", method.getDeclaringClass().getSimpleName(), method.getName());
 
     return result;
   }
