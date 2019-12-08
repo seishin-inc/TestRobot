@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 //import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,13 +28,14 @@ public class RetryHandler implements InvocationHandler {
   private Object target;
 
   public RetryHandler(Object target) {
+    // WebDriver / WebElement
     this.target = target;
   }
 
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
     //System.out.println("DynamicProxy:before");
-    logger.trace("before:{}-{}-{}",method.getDeclaringClass().getSimpleName(), method.getName(),args);
+    logger.trace("before:{}-{}-{}", method.getDeclaringClass().getSimpleName(), method.getName(), args);
 
     Object result = null;
 
@@ -59,6 +61,10 @@ public class RetryHandler implements InvocationHandler {
           //対象が一時的に利用不可
           logger.warn("ElementNotVisibleException 対象が一時的に利用不可。リトライ発生");
           logger.trace(ex.getMessage(), ex);
+        } else if (cause instanceof NoSuchWindowException) {
+          //画面が存在なし
+          logger.warn("NoSuchWindowException window存在なし。リトライ発生");
+          logger.trace(ex.getMessage(), ex);
         } else {
           logger.error("想定外異常発生しました。", ex);
           throw ex;
@@ -76,7 +82,7 @@ public class RetryHandler implements InvocationHandler {
       }
     }
 
-    logger.trace("after:{}-{}", method.getDeclaringClass().getSimpleName(), method.getName());
+    logger.trace("after:{}-{}-{}", method.getDeclaringClass().getSimpleName(), method.getName(), result);
 
     return result;
   }

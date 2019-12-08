@@ -2,17 +2,17 @@ package automationtest.aitest.configuration;
 
 public class Configuration {
 
-  private long explicityWaitMilliseconds;
+  private long explicityWaitSeconds;
   private long implicityWaitMilliseconds;
   private long maxRetryWaitMilliseconds;
   private long retryIntervalMilliseonds;
 
-  public long getExplicityWaitMilliseconds() {
-    return explicityWaitMilliseconds;
+  public long getExplicityWaitSeconds() {
+    return explicityWaitSeconds;
   }
 
-  public void setExplicityWaitMilliseconds(long value) {
-    this.explicityWaitMilliseconds = value;
+  public void setExplicityWaitSeconds(long value) {
+    this.explicityWaitSeconds = value;
   }
 
   public long getImplicityWaitMilliseconds() {

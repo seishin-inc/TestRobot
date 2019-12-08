@@ -1,5 +1,7 @@
 package automationtest.aitest.utils;
 
+import org.openqa.selenium.WebDriver;
+
 import automationtest.aitest.configuration.Configuration;
 import automationtest.aitest.configuration.ConfigurationManager;
 
@@ -21,6 +23,9 @@ public class AITestUtils {
     return ConfigurationManager.getInstance().getConf();
   }
 
+  public static void switchToTop(WebDriver driver) {
+
+  }
 
 
 }

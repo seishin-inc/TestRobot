@@ -1,5 +1,5 @@
 {
-    "ExplicityWaitMilliseconds": 0,
+    "ExplicityWaitSeconds": 0,
     "ImplicityWaitMilliseconds": 0,
     "MaxRetryWaitMilliseconds":0,
     "RetryIntervalMilliseonds":0

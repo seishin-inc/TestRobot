@@ -7,17 +7,24 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.Rectangle;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.WrapsDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import automationtest.aitest.proxy.WebElementProxy;
 import automationtest.aitest.proxy.handler.RetryHandler;
+import automationtest.aitest.utils.AITestUtils;
 
 public class AITestWebElementImpl implements AITestWebElement {
 
   private final WebElement rawWebElement;
 
   private final WebElement rawWebElementProxy;
+
+  private final WebDriverWait wait;
+
   /**
    * コンストラクター
    * @param argWrappedWebDriver
@@ -29,8 +36,10 @@ public class AITestWebElementImpl implements AITestWebElement {
 
     this.rawWebElementProxy = WebElementProxy.createProxy(new RetryHandler(argWrappedWebElement));
     this.rawWebElement = argWrappedWebElement;
-  }
+    WebDriver wrappedDriver = getWrappedDriver();
+    wait = new WebDriverWait(wrappedDriver, AITestUtils.getConf().getExplicityWaitSeconds());
 
+  }
 
   @Override
   public void click() {
@@ -122,11 +131,21 @@ public class AITestWebElementImpl implements AITestWebElement {
   }
 
   public WebElement getRawWebElement() {
-    return rawWebElement;
+    return this.rawWebElement;
   }
 
   public WebElement getRawWebElementProxy() {
-    return rawWebElementProxy;
+    return this.rawWebElementProxy;
+  }
+
+  @Override
+  public WebDriver getWrappedDriver() {
+    WebDriver wrappedDriver = null;
+    if (this.rawWebElement instanceof WrapsDriver) {
+      WrapsDriver wraps = (WrapsDriver) this.rawWebElement;
+      wrappedDriver = wraps.getWrappedDriver();
+    }
+    return wrappedDriver;
   }
 
 }
