@@ -3,13 +3,13 @@ package automationtest.aitest.proxy;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WebDriverProxy {
 
-  protected Logger logger = LogManager.getLogger();
+  protected static final Logger logger =  LoggerFactory.getLogger(WebDriverProxy.class);
 
   //private WebDriver webDriver;
   private Object driver;

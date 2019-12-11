@@ -1,14 +1,15 @@
 package automationtest.aitest.webdriver;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import automationtest.aitest.proxy.WebDriverProxy;
 import automationtest.aitest.proxy.handler.RetryHandler;
@@ -22,7 +23,7 @@ import automationtest.aitest.utils.AITestUtils;
 public class AITestWebDriverImpl implements AITestWebDriver {
 
   //The name of this Logge will be "automationtest.aitest.webdriver.AITestWebDriver"
-  protected static final Logger logger = LogManager.getLogger();
+  protected static final Logger logger = LoggerFactory.getLogger(AITestWebDriverImpl.class);
 
   private final WebDriver rawWebDriver;
 
@@ -37,8 +38,8 @@ public class AITestWebDriverImpl implements AITestWebDriver {
       throw new IllegalArgumentException("argWrappedWebDriver can not be null;");
     }
 
-    this.rawWebDriverProxy = WebDriverProxy.createProxy(new RetryHandler(argWrappedWebDriver));
     this.rawWebDriver = argWrappedWebDriver;
+    this.rawWebDriverProxy = WebDriverProxy.createProxy(new RetryHandler(argWrappedWebDriver));
 
     /************************ implicity wati option ****************************/
     argWrappedWebDriver.manage().timeouts().implicitlyWait(AITestUtils.getConf().getImplicityWaitMilliseconds(),
@@ -53,9 +54,7 @@ public class AITestWebDriverImpl implements AITestWebDriver {
 
   @Override
   public String getCurrentUrl() {
-
     return this.getRawWebDriverProxy().getCurrentUrl();
-
   }
 
   @Override
@@ -66,12 +65,25 @@ public class AITestWebDriverImpl implements AITestWebDriver {
   @Override
   public List<WebElement> findElements(By by) {
     // OldBy to NewBy
-    return this.getRawWebDriverProxy().findElements(by);
+    List<WebElement> rawElements = this.getRawWebDriverProxy().findElements(by);
+
+    if (rawElements == null || rawElements.size() <= 0) {
+      return null;
+    }
+
+    List<WebElement> wrappers = new ArrayList<WebElement>();
+
+    for (WebElement rawElement : rawElements) {
+      wrappers.add(new AITestWebElementImpl(rawElement));
+    }
+
+    return wrappers;
   }
 
   @Override
   public WebElement findElement(By by) {
-    return this.getRawWebDriverProxy().findElement(by);
+    WebElement rawElement = this.getRawWebDriverProxy().findElement(by);
+    return new AITestWebElementImpl(rawElement);
   }
 
   @Override

@@ -12,6 +12,8 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WrapsDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import automationtest.aitest.proxy.WebElementProxy;
 import automationtest.aitest.proxy.handler.RetryHandler;
@@ -19,11 +21,15 @@ import automationtest.aitest.utils.AITestUtils;
 
 public class AITestWebElementImpl implements AITestWebElement {
 
+  private static final Logger logger = LoggerFactory.getLogger(AITestWebElement.class);
+
   private final WebElement rawWebElement;
 
   private final WebElement rawWebElementProxy;
 
   private final WebDriverWait wait;
+
+  private final WebDriver wrappedDriver;
 
   /**
    * コンストラクター
@@ -36,8 +42,8 @@ public class AITestWebElementImpl implements AITestWebElement {
 
     this.rawWebElementProxy = WebElementProxy.createProxy(new RetryHandler(argWrappedWebElement));
     this.rawWebElement = argWrappedWebElement;
-    WebDriver wrappedDriver = getWrappedDriver();
-    wait = new WebDriverWait(wrappedDriver, AITestUtils.getConf().getExplicityWaitSeconds());
+    this.wrappedDriver = getWrappedDriver();
+    this.wait = new WebDriverWait(wrappedDriver, AITestUtils.getConf().getExplicityWaitSeconds());
 
   }
 
