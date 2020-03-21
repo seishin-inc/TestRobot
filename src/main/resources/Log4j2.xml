@@ -1,16 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="WARN">
-  <Appenders>
-    <Console name="Console" target="SYSTEM_OUT">
-      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-    </Console>
-  </Appenders>
-  <Loggers>
-    <Logger name="com.foo.Bar" level="trace">
-      <AppenderRef ref="Console"/>
-    </Logger>
-    <Root level="trace">
-      <AppenderRef ref="Console"/>
-    </Root>
-  </Loggers>
+<Configuration status="OFF">
+    <Properties>
+        <Property name="ptn">%d{yyyy-MM-dd HH:mm:ss.SSS} p=%-5p c=%c t=%t C=%C F=%F M=%M L=%L m=%m %n</Property>
+    </Properties>
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${ptn}" />
+        </Console>
+        <RollingFile name="file" fileName="log/log4j2.log"
+            filePattern="log/%d{yyyyMM}/log4j2_%d{yyyyMMdd}_%i.log">
+            <PatternLayout pattern="${ptn}" />
+            <Policies>
+                <OnStartupTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="2 MB" />
+                <TimeBasedTriggeringPolicy />
+            </Policies>
+            <DefaultRolloverStrategy max="10" />
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Root level="debug">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="file" />
+        </Root>
+    </Loggers>
 </Configuration>

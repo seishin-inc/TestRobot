@@ -1,5 +1,7 @@
 package automationtest.aitest;
 
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
@@ -10,7 +12,11 @@ import org.junit.rules.TemporaryFolder;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import automationtest.aitest.utils.AITestUtils;
+import automationtest.aitest.webdriver.AITestWebDriver;
 import automationtest.aitest.webdriver.AITestWebDriverImpl;
 
 public class JUnit4Test {
@@ -19,6 +25,7 @@ public class JUnit4Test {
     private String baseUrl = "";
     private boolean acceptNextAlert = true;
     private StringBuffer verificationErrors = new StringBuffer();
+    private static final Logger logger = LoggerFactory.getLogger(JUnit4Test.class);
 
 //    @Rule
 //    public TestName testName = new TestName();
@@ -56,8 +63,11 @@ public class JUnit4Test {
         driver.findElement(By.id("guestname")).click();
         driver.findElement(By.id("guestname")).clear();
         driver.findElement(By.id("guestname")).sendKeys("tewst");
-        driver.findElement(By.id("goto_next")).click();
 
+        List<Map<String, String>> inputList = AITestUtils.getInputList(((AITestWebDriver)this.driver).getRawWebDriver());
+        logger.debug("inpulist:");
+
+        driver.findElement(By.id("goto_next")).click();
        // driver.
     }
 

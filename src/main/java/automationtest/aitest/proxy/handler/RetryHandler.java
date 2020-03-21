@@ -8,7 +8,6 @@ import java.lang.reflect.Method;
 //import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,7 @@ import automationtest.aitest.utils.AITestUtils;
  */
 public class RetryHandler implements InvocationHandler {
 
-  private static Logger logger = LoggerFactory.getLogger(RetryHandler.class);//LogManager.getLogger();
+  private static final Logger logger = LoggerFactory.getLogger(RetryHandler.class);//LogManager.getLogger();
 
   private Object target;
 
@@ -52,22 +51,18 @@ public class RetryHandler implements InvocationHandler {
         if (cause instanceof NoSuchElementException) {
           //対象が存在なし
           logger.warn("NoSuchElementException 対象が存在なし。リトライ発生");
-          logger.trace(ex.getMessage(), ex);
         } else if (cause instanceof StaleElementReferenceException) {
           //対象が古かった
-          logger.warn("NoSuchElementException 対象が古かった。リトライ発生");
-          logger.trace(ex.getMessage(), ex);
+          logger.warn("StaleElementReferenceException 対象が古かった。リトライ発生");
         } else if (cause instanceof ElementNotVisibleException) {
           //対象が一時的に利用不可
           logger.warn("ElementNotVisibleException 対象が一時的に利用不可。リトライ発生");
-          logger.trace(ex.getMessage(), ex);
-        } else if (cause instanceof NoSuchWindowException) {
-          //画面が存在なし
-          logger.warn("NoSuchWindowException window存在なし。リトライ発生");
-          logger.trace(ex.getMessage(), ex);
+//        } else if (cause instanceof NoSuchWindowException) {
+//          //画面が存在なし
+//          logger.warn("NoSuchWindowException window存在なし。リトライ発生");
         } else {
-          logger.error("想定外異常発生しました。", ex);
-          throw ex;
+          //          logger.error("想定外異常発生しました。", ex);
+          throw new AITestException("想定外異常発生しました。", ex);
         }
 
         //CPUを独占しないように、リトライ処理の間に間隔時間をあける
@@ -76,7 +71,8 @@ public class RetryHandler implements InvocationHandler {
         end = System.currentTimeMillis();
         long maxRetryWaitMs = AITestUtils.getConf().getMaxRetryWaitMilliseconds();
         if (end - start > maxRetryWaitMs) {
-          throw new AITestException("最大待ち時間を超えたため、処理を終了する。");
+          //logger.error(ex.getMessage(), ex);
+          throw new AITestException("最大待ち時間を超えたため、処理を終了する。", ex);
         }
 
       }

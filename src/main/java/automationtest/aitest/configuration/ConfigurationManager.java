@@ -2,10 +2,9 @@ package automationtest.aitest.configuration;
 
 public class ConfigurationManager {
 
-  private final Configuration conf = null;
+  private final Configuration conf = new Configuration();
 
   private ConfigurationManager() {
-
 
   }
 

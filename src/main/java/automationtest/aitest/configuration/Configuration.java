@@ -2,10 +2,10 @@ package automationtest.aitest.configuration;
 
 public class Configuration {
 
-  private long explicityWaitSeconds;
-  private long implicityWaitMilliseconds;
-  private long maxRetryWaitMilliseconds;
-  private long retryIntervalMilliseonds;
+  private long explicityWaitSeconds = 0;
+  private long implicityWaitMilliseconds = 0;
+  private long maxRetryWaitMilliseconds = 0;
+  private long retryIntervalMilliseonds = 0;
 
   public long getExplicityWaitSeconds() {
     return explicityWaitSeconds;

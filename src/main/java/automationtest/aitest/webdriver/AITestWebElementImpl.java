@@ -1,5 +1,6 @@
 package automationtest.aitest.webdriver;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -31,11 +32,15 @@ public class AITestWebElementImpl implements AITestWebElement {
 
   private final WebDriver wrappedDriver;
 
+  private final By locator;
+
   /**
    * コンストラクター
-   * @param argWrappedWebDriver
+   * @param argWrappedWebElement
+   * @param argPreWebElement
+   * @param argLocator
    */
-  public AITestWebElementImpl(WebElement argWrappedWebElement) {
+  public AITestWebElementImpl(WebElement argWrappedWebElement, WebElement argParentWebElement, By argLocator) {
     if (argWrappedWebElement == null) {
       throw new IllegalArgumentException("argWrappedWebElement can not be null;");
     }
@@ -44,12 +49,14 @@ public class AITestWebElementImpl implements AITestWebElement {
     this.rawWebElement = argWrappedWebElement;
     this.wrappedDriver = getWrappedDriver();
     this.wait = new WebDriverWait(wrappedDriver, AITestUtils.getConf().getExplicityWaitSeconds());
+    this.locator = argLocator;
 
   }
 
   @Override
   public void click() {
     this.getRawWebElementProxy().click();
+
 
   }
 
@@ -98,12 +105,25 @@ public class AITestWebElementImpl implements AITestWebElement {
 
   @Override
   public List<WebElement> findElements(By by) {
-    return this.getRawWebElementProxy().findElements(by);
+    List<WebElement> wrappers = new ArrayList<WebElement>();
+    List<WebElement> rawElements = this.getRawWebElementProxy().findElements(by);
+    if (rawElements == null || rawElements.size() <= 0) {
+      return wrappers;
+    }
+
+    for (WebElement rawElement : rawElements) {
+      wrappers.add(new AITestWebElementImpl(rawElement, this,  by));
+    }
+
+    return wrappers;
+
   }
 
   @Override
   public WebElement findElement(By by) {
-    return this.getRawWebElementProxy().findElement(by);
+    WebElement rawWebElement = this.getRawWebElementProxy().findElement(by);
+    return new AITestWebElementImpl(rawWebElement, this, by);
+
   }
 
   @Override

@@ -64,17 +64,17 @@ public class AITestWebDriverImpl implements AITestWebDriver {
 
   @Override
   public List<WebElement> findElements(By by) {
+    List<WebElement> wrappers = new ArrayList<WebElement>();
+
     // OldBy to NewBy
     List<WebElement> rawElements = this.getRawWebDriverProxy().findElements(by);
 
     if (rawElements == null || rawElements.size() <= 0) {
-      return null;
+      return wrappers;
     }
 
-    List<WebElement> wrappers = new ArrayList<WebElement>();
-
     for (WebElement rawElement : rawElements) {
-      wrappers.add(new AITestWebElementImpl(rawElement));
+      wrappers.add(new AITestWebElementImpl(rawElement, null,  by));
     }
 
     return wrappers;
@@ -83,7 +83,7 @@ public class AITestWebDriverImpl implements AITestWebDriver {
   @Override
   public WebElement findElement(By by) {
     WebElement rawElement = this.getRawWebDriverProxy().findElement(by);
-    return new AITestWebElementImpl(rawElement);
+    return new AITestWebElementImpl(rawElement, null, by);
   }
 
   @Override
@@ -114,7 +114,7 @@ public class AITestWebDriverImpl implements AITestWebDriver {
   @Override
   public TargetLocator switchTo() {
     TargetLocator wrappedTargetLocator = this.getRawWebDriverProxy().switchTo();
-    return new AITestTargetLocator(wrappedTargetLocator);
+    return new AITestTargetLocatorImpl(wrappedTargetLocator);
   }
 
   @Override
@@ -134,5 +134,7 @@ public class AITestWebDriverImpl implements AITestWebDriver {
   public WebDriver getRawWebDriverProxy() {
     return rawWebDriverProxy;
   }
+
+
 
 }
