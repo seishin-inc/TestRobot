@@ -15,9 +15,9 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import automationtest.aitest.utils.AITestUtils;
-import automationtest.aitest.webdriver.AITestWebDriver;
-import automationtest.aitest.webdriver.AITestWebDriverImpl;
+import automationtest.aitest.utils.AutoTestUtils;
+import automationtest.aitest.webdriver.AutoTestWebDriver;
+import automationtest.aitest.webdriver.AutoTestWebDriverImpl;
 
 public class JUnit4Test2 {
 
@@ -40,7 +40,7 @@ public class JUnit4Test2 {
     @Before
     public void setUp() throws Exception {
         System.setProperty("webdriver.chrome.driver", "exe/chromedriver");
-        this.driver = new AITestWebDriverImpl(new ChromeDriver());
+        this.driver = new AutoTestWebDriverImpl(new ChromeDriver());
         this.baseUrl = "https://www.katalon.com/";
         this.driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
     }
@@ -64,7 +64,7 @@ public class JUnit4Test2 {
 //        driver.findElement(By.id("guestname")).clear();
 //        driver.findElement(By.id("guestname")).sendKeys("tewst");
 
-        List<Map<String, String>> inputList = AITestUtils.getInputList(((AITestWebDriver)this.driver).getRawWebDriver());
+        List<Map<String, String>> inputList = AutoTestUtils.getInputList(((AutoTestWebDriver)this.driver).getRawWebDriver());
         logger.debug("inpulist:");
 
         driver.findElement(By.id("goto_next")).click();

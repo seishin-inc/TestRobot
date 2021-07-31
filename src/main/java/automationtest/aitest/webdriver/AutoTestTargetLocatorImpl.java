@@ -7,9 +7,9 @@ import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AITestTargetLocatorImpl implements AITestTargetLocator {
+public class AutoTestTargetLocatorImpl implements AutoTestTargetLocator {
 
-  private static final Logger logger = LoggerFactory.getLogger(AITestTargetLocatorImpl.class);
+  private static final Logger logger = LoggerFactory.getLogger(AutoTestTargetLocatorImpl.class);
 
   private final TargetLocator rawTargetLocator;
 
@@ -17,7 +17,7 @@ public class AITestTargetLocatorImpl implements AITestTargetLocator {
    * コンストラクター
    * @param argWrappedTargetLocator
    */
-  public AITestTargetLocatorImpl(TargetLocator argWrappedTargetLocator) {
+  public AutoTestTargetLocatorImpl(TargetLocator argWrappedTargetLocator) {
 
     if (argWrappedTargetLocator == null) {
       throw new IllegalArgumentException("argWrappedTargetLocator can not be null;");

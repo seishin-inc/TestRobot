@@ -6,26 +6,26 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.TargetLocator;
 import org.openqa.selenium.WebElement;
 
-import automationtest.aitest.webdriver.AITestTargetLocatorImpl;
-import automationtest.aitest.webdriver.AITestWebDriverImpl;
-import automationtest.aitest.webdriver.AITestWebElementImpl;
+import automationtest.aitest.webdriver.AutoTestTargetLocatorImpl;
+import automationtest.aitest.webdriver.AutoTestWebDriverImpl;
+import automationtest.aitest.webdriver.AutoTestWebElementImpl;
 
-public class AITestFactory implements TesterFactory {
+public class AutoTestFactory implements TesterFactory {
 
 //  private static final WebDriver driver = new AITestWebDriverImpl(new ChromeDriver());
   @Override
   public WebDriver getWebDriver(WebDriver argRawDriver) {
-    return new AITestWebDriverImpl(argRawDriver);
+    return new AutoTestWebDriverImpl(argRawDriver);
   }
 
   @Override
   public WebElement getWebElement(WebElement argRawElement, By argLocator) {
-    return new AITestWebElementImpl(argRawElement, null, argLocator);
+    return new AutoTestWebElementImpl(argRawElement, null, argLocator);
   }
 
   @Override
   public TargetLocator getTargetLocator(TargetLocator argRawTargetLocator) {
-    return new AITestTargetLocatorImpl(argRawTargetLocator);
+    return new AutoTestTargetLocatorImpl(argRawTargetLocator);
   }
 
   @Override

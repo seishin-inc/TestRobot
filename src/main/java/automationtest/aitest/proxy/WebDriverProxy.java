@@ -9,17 +9,24 @@ import org.slf4j.LoggerFactory;
 
 public class WebDriverProxy {
 
-  protected static final Logger logger =  LoggerFactory.getLogger(WebDriverProxy.class);
+  protected static final Logger logger = LoggerFactory.getLogger(WebDriverProxy.class);
 
-  //private WebDriver webDriver;
-  private Object driver;
+  private WebDriver driver = null;
 
-  private WebDriverProxy(InvocationHandler argHanlder) {
-      //this.webDriver = argWebDriver;
-      this.driver = Proxy.newProxyInstance(
-          WebDriver.class.getClassLoader(),
-          new Class[]{ WebDriver.class },
-          argHanlder);
+  /**
+   * コンストラクター.
+   * @param argHanlder
+   */
+  private WebDriverProxy(InvocationHandler argInvocationHanlder) {
+    // handlerを設定して、Proxyのインスタンスを作成する
+    Object proxy = Proxy.newProxyInstance(
+        WebDriver.class.getClassLoader(),
+        new Class[] { WebDriver.class },
+        argInvocationHanlder);
+
+    if (proxy instanceof WebDriver) {
+      driver = (WebDriver) proxy;
+    }
   }
 
   /**
@@ -31,7 +38,7 @@ public class WebDriverProxy {
     WebDriver webDriver = null;
 
     if (webDriverProxy.driver instanceof WebDriver) {
-      webDriver =  WebDriver.class.cast(webDriverProxy.driver);
+      webDriver = WebDriver.class.cast(webDriverProxy.driver);
     }
 
     return webDriver;

@@ -13,17 +13,17 @@ import org.slf4j.LoggerFactory;
 
 import automationtest.aitest.proxy.WebDriverProxy;
 import automationtest.aitest.proxy.handler.RetryHandler;
-import automationtest.aitest.utils.AITestUtils;
+import automationtest.aitest.utils.AutoTestUtils;
 
 /**
- *
+ * 
  * @author kai
  *
  */
-public class AITestWebDriverImpl implements AITestWebDriver {
+public class AutoTestWebDriverImpl implements AutoTestWebDriver {
 
   //The name of this Logge will be "automationtest.aitest.webdriver.AITestWebDriver"
-  protected static final Logger logger = LoggerFactory.getLogger(AITestWebDriverImpl.class);
+  protected static final Logger logger = LoggerFactory.getLogger(AutoTestWebDriverImpl.class);
 
   private final WebDriver rawWebDriver;
 
@@ -33,16 +33,16 @@ public class AITestWebDriverImpl implements AITestWebDriver {
    * コンストラクター
    * @param argWrappedWebDriver
    */
-  public AITestWebDriverImpl(WebDriver argWrappedWebDriver) {
-    if (argWrappedWebDriver == null) {
+  public AutoTestWebDriverImpl(WebDriver argWebDriver) {
+    if (argWebDriver == null) {
       throw new IllegalArgumentException("argWrappedWebDriver can not be null;");
     }
 
-    this.rawWebDriver = argWrappedWebDriver;
-    this.rawWebDriverProxy = WebDriverProxy.createProxy(new RetryHandler(argWrappedWebDriver));
+    this.rawWebDriver = argWebDriver;
+    this.rawWebDriverProxy = WebDriverProxy.createProxy(new RetryHandler(argWebDriver));
 
     /************************ implicity wati option ****************************/
-    argWrappedWebDriver.manage().timeouts().implicitlyWait(AITestUtils.getConf().getImplicityWaitMilliseconds(),
+    argWebDriver.manage().timeouts().implicitlyWait(AutoTestUtils.getConf().getImplicityWaitMilliseconds(),
         TimeUnit.MILLISECONDS);
 
   }
@@ -74,7 +74,7 @@ public class AITestWebDriverImpl implements AITestWebDriver {
     }
 
     for (WebElement rawElement : rawElements) {
-      wrappers.add(new AITestWebElementImpl(rawElement, null,  by));
+      wrappers.add(new AutoTestWebElementImpl(rawElement, null, by));
     }
 
     return wrappers;
@@ -82,8 +82,21 @@ public class AITestWebDriverImpl implements AITestWebDriver {
 
   @Override
   public WebElement findElement(By by) {
+    //    private static void WaitForReady()
+    //    {
+    //        WebDriverWait wait = new WebDriverWait(webDriver, waitForElement);
+    //        wait.Until(driver =>
+    //        {
+    //            bool isAjaxFinished = (bool)((IJavaScriptExecutor)driver).
+    //                ExecuteScript("return jQuery.active == 0");
+    //            bool isLoaderHidden = (bool)((IJavaScriptExecutor)driver).
+    //                ExecuteScript("return $('.spinner').is(':visible') == false");
+    //            return isAjaxFinished & isLoaderHidden;
+    //        });
+    //    }
+
     WebElement rawElement = this.getRawWebDriverProxy().findElement(by);
-    return new AITestWebElementImpl(rawElement, null, by);
+    return new AutoTestWebElementImpl(rawElement, null, by);
   }
 
   @Override
@@ -114,7 +127,7 @@ public class AITestWebDriverImpl implements AITestWebDriver {
   @Override
   public TargetLocator switchTo() {
     TargetLocator wrappedTargetLocator = this.getRawWebDriverProxy().switchTo();
-    return new AITestTargetLocatorImpl(wrappedTargetLocator);
+    return new AutoTestTargetLocatorImpl(wrappedTargetLocator);
   }
 
   @Override
@@ -127,6 +140,7 @@ public class AITestWebDriverImpl implements AITestWebDriver {
     return this.getRawWebDriverProxy().manage();
   }
 
+  @Override
   public WebDriver getRawWebDriver() {
     return rawWebDriver;
   }
@@ -134,7 +148,5 @@ public class AITestWebDriverImpl implements AITestWebDriver {
   public WebDriver getRawWebDriverProxy() {
     return rawWebDriverProxy;
   }
-
-
 
 }

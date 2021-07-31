@@ -18,11 +18,11 @@ import org.slf4j.LoggerFactory;
 
 import automationtest.aitest.proxy.WebElementProxy;
 import automationtest.aitest.proxy.handler.RetryHandler;
-import automationtest.aitest.utils.AITestUtils;
+import automationtest.aitest.utils.AutoTestUtils;
 
-public class AITestWebElementImpl implements AITestWebElement {
+public class AutoTestWebElementImpl implements AutoTestWebElement {
 
-  private static final Logger logger = LoggerFactory.getLogger(AITestWebElement.class);
+  private static final Logger logger = LoggerFactory.getLogger(AutoTestWebElement.class);
 
   private final WebElement rawWebElement;
 
@@ -36,19 +36,19 @@ public class AITestWebElementImpl implements AITestWebElement {
 
   /**
    * コンストラクター
-   * @param argWrappedWebElement
+   * @param argWebElement
    * @param argPreWebElement
    * @param argLocator
    */
-  public AITestWebElementImpl(WebElement argWrappedWebElement, WebElement argParentWebElement, By argLocator) {
-    if (argWrappedWebElement == null) {
+  public AutoTestWebElementImpl(WebElement argWebElement, WebElement argParentWebElement, By argLocator) {
+    if (argWebElement == null) {
       throw new IllegalArgumentException("argWrappedWebElement can not be null;");
     }
 
-    this.rawWebElementProxy = WebElementProxy.createProxy(new RetryHandler(argWrappedWebElement));
-    this.rawWebElement = argWrappedWebElement;
+    this.rawWebElementProxy = WebElementProxy.createProxy(new RetryHandler(argWebElement));
+    this.rawWebElement = argWebElement;
     this.wrappedDriver = getWrappedDriver();
-    this.wait = new WebDriverWait(wrappedDriver, AITestUtils.getConf().getExplicityWaitSeconds());
+    this.wait = new WebDriverWait(wrappedDriver, AutoTestUtils.getConf().getExplicityWaitSeconds());
     this.locator = argLocator;
 
   }
@@ -56,7 +56,6 @@ public class AITestWebElementImpl implements AITestWebElement {
   @Override
   public void click() {
     this.getRawWebElementProxy().click();
-
 
   }
 
@@ -112,7 +111,7 @@ public class AITestWebElementImpl implements AITestWebElement {
     }
 
     for (WebElement rawElement : rawElements) {
-      wrappers.add(new AITestWebElementImpl(rawElement, this,  by));
+      wrappers.add(new AutoTestWebElementImpl(rawElement, this, by));
     }
 
     return wrappers;
@@ -122,7 +121,7 @@ public class AITestWebElementImpl implements AITestWebElement {
   @Override
   public WebElement findElement(By by) {
     WebElement rawWebElement = this.getRawWebElementProxy().findElement(by);
-    return new AITestWebElementImpl(rawWebElement, this, by);
+    return new AutoTestWebElementImpl(rawWebElement, this, by);
 
   }
 

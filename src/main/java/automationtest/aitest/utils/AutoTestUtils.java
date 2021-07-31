@@ -9,13 +9,13 @@ import org.openqa.selenium.WebDriver;
 import automationtest.aitest.configuration.Configuration;
 import automationtest.aitest.configuration.ConfigurationManager;
 
-public class AITestUtils {
+public class AutoTestUtils {
 
   /**
    * コンストラクター<br>
    * インスタンス作成を防ぐため、私有化する
    */
-  private AITestUtils() {
+  private AutoTestUtils() {
 
   }
 

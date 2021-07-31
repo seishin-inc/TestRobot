@@ -16,17 +16,23 @@ public class WebElementProxy {
 
   protected static final Logger logger = LoggerFactory.getLogger(WebElementProxy.class);
 
-  private Object webElement;
+  private WebElement webElement;
 
   private WebElementProxy(InvocationHandler argHanlder) {
-      this.webElement = Proxy.newProxyInstance(
-          WebElement.class.getClassLoader(),
-          new Class[]{ WebElement.class },
-          argHanlder);
+    Object proxy = Proxy.newProxyInstance(
+        WebElement.class.getClassLoader(),
+        new Class[] { WebElement.class },
+        argHanlder);
+
+    if (proxy instanceof WebElement) {
+      this.webElement = (WebElement) proxy;
+    }
   }
 
   /**
    * 外部からはこのメソッドを通じてProxyを取得します.
+   * @param argHandler
+   * @return
    */
   public static WebElement createProxy(InvocationHandler argHandler) {
     WebElementProxy webElementProxy = new WebElementProxy(argHandler);
@@ -34,7 +40,7 @@ public class WebElementProxy {
     WebElement webElement = null;
 
     if (webElementProxy.webElement instanceof WebElement) {
-      webElement =  WebElement.class.cast(webElementProxy.webElement);
+      webElement = WebElement.class.cast(webElementProxy.webElement);
     }
     return webElement;
 
